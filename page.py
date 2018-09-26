@@ -16,6 +16,7 @@ class Page:
         f = open(self.filepath + '.json', "r")
         raw = f.read().decode('utf-8', 'replace')
         content = json.loads(raw)
+        content['filename'] = filename
         f.close()
         return content
 
