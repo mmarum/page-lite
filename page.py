@@ -3,6 +3,7 @@ import json
 import re
 
 base = 'www'
+index = []
 
 class Page:
     def __init__(self, section, filename):
@@ -12,25 +13,21 @@ class Page:
         self.template = section + '.html'
 
 
-    def get_content(self):
-        f = open(self.filepath + '.json', "r")
-        raw = f.read().decode('utf-8', 'replace')
-        content = json.loads(raw)
-        content['filename'] = filename
-        f.close()
-        return content
-
-
     def render_template(self, data):
         self.html = ''
         f = open(self.template, "r")
         for line in f:
             for item in data:
-                if item in line and data[item] != None:
+                if data['title'] == 'index':
+                    links = ''
+                    for link in data['links']:
+                        links += '<a href="' + link + '.html">' + link + '</a><br>\n'
+                    line = line.replace('{{ data.lyrics }}', links)
+                elif item in line and data[item] != None:
                     line = line.replace('{{ data.' + item + ' }}', data[item])
             self.html += line
-        return self.html
         f.close()
+        return self.html
 
 
     def write_page(self):
@@ -40,19 +37,25 @@ class Page:
         return True
 
 
-def get_file_list(section, extension):
-    filelist = []
-    for filename in os.listdir('/'.join([base, section])):
-        if filename.endswith(extension): 
-            filename = filename.replace('.' + extension, '')
-            filelist.append(filename)
-    return filelist
-            
+def get_data(data_source):
+    f = open(data_source, "r")
+    raw = f.read()
+    content = json.loads(raw)
+    f.close()
+    return content
 
-for filename in get_file_list('lyrics', 'json'):
-    print filename
-    p = Page('lyrics', filename)
-    data = p.get_content()
-    p.render_template(data)
-    p.write_page()
+
+for item in get_data('songs.json'):
+    if item['lyrics'] != 'null':
+        filename = item['filename']
+        p = Page('lyrics', filename)
+        p.render_template(item)
+        p.write_page()
+        index.append(filename)
+
+# write index
+index_data = { "title": "index", "links": index }
+p = Page('lyrics', 'index')
+p.render_template(index_data)
+p.write_page()
 
