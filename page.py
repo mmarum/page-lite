@@ -22,11 +22,11 @@ class Page:
                     links = ''
                     for link in data['links']:
                         links += '<a href="' + link + '.html">' + link.replace('-',' ').title() + '</a><br>\n'
-                    line = line.replace('{{ data.lyrics }}', links)
-                    line = line.replace('{{ data.about }}', data['about'])
-                    line = line.replace('{{ data.credits }}', '')
-                    line = line.replace('{{ data.title }}', 'Lyrics Index')
-                elif item in line and data[item] != None:
+                    if item == 'links':
+                        line = line.replace('{{ data.lyrics }}', links)
+                        line = line.replace('<iframe', '<!-- ')
+                        line = line.replace('iframe>', '  -->')
+                if item in line and data[item] != None:
                     if item == 'track':
                         data['track'] = str(data['track'])
                     line = line.replace('{{ data.' + item + ' }}', data[item])
