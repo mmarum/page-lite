@@ -1,6 +1,6 @@
 import os
 import json
-import re
+#import re
 
 base = 'www'
 index = []
@@ -21,9 +21,14 @@ class Page:
                 if data['title'] == 'index':
                     links = ''
                     for link in data['links']:
-                        links += '<a href="' + link + '.html">' + link + '</a><br>\n'
+                        links += '<a href="' + link + '.html">' + link.replace('-',' ').title() + '</a><br>\n'
                     line = line.replace('{{ data.lyrics }}', links)
+                    line = line.replace('{{ data.about }}', data['about'])
+                    line = line.replace('{{ data.credits }}', '')
+                    line = line.replace('{{ data.title }}', 'Lyrics Index')
                 elif item in line and data[item] != None:
+                    if item == 'track':
+                        data['track'] = str(data['track'])
                     line = line.replace('{{ data.' + item + ' }}', data[item])
             self.html += line
         f.close()
@@ -54,7 +59,7 @@ for item in get_data('songs.json'):
         index.append(filename)
 
 # write index
-index_data = { "title": "index", "links": index }
+index_data = { "about": "", "credits": "", "title": "index", "links": index }
 p = Page('lyrics', 'index')
 p.render_template(index_data)
 p.write_page()

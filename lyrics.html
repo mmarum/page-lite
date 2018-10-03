@@ -4,22 +4,20 @@
 <title>{{ data.title }}</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="">
-<meta name="keyword" content="">
+<meta name="description" content="{{ data.title }} {{ data.about }}">
+<meta name="keyword" content="{{ data.title }} {{ data.about }}">
 <link rel="stylesheet" href="/style.css" />
-<style>
-.center {
-    max-width: 500px;
-}
-</style>
 </head>
 <body>
 <div class="center">
-<p><a href="/lyrics">Lyrics index</a></p>
+<a href="/lyrics">Index</a> |
+<a href="https://store.cdbaby.com/Artist/JedMarum">CDBaby</a>
+<!-- <a href="https://jedmarum.bandcamp.com/track/{{ data.filename }}">Bandcamp</a> | -->
+<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/track={{ data.track }}/size=small/bgcol=333333/linkcol=9a64ff/transparent=true/" seamless><a href="http://jedmarum.bandcamp.com/track/{{ data.filename }}">{{ data.title }}</a></iframe>
 <h1>{{ data.title }}</h1>
 <h2>{{ data.about }}</h2>
-<h3>{{ data.credits }}</h3>
 <div class="lyrics">{{ data.lyrics }}</div>
+<div class="credits">{{ data.credits }}</div>
 </div>
 </body>
 </html>
